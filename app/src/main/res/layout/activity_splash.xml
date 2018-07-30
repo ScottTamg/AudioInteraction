@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:layout_editor_absoluteY="25dp">
+
+    <Button
+        android:id="@+id/enter"
+        android:layout_width="278dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/login_enter"
+        android:onClick="onClickEnterButton"
+        android:text="@string/welcome_gointo"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room_id" />
+
+    <TextView
+        android:id="@+id/set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="21dp"
+        android:inputType="textEmailAddress"
+        android:onClick="onSetButtonClick"
+        android:text="高级设置"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enter" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="142dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/room_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:layout_marginTop="43dp"
+        android:gravity="right|center_vertical"
+        android:singleLine="true"
+        android:text="@string/welcome_roomid"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/videolink"
+        app:layout_constraintTop_toBottomOf="@+id/videolink" />
+
+    <EditText
+        android:id="@+id/room_id"
+        android:layout_width="205dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/login_edit"
+        android:ems="10"
+        android:hint="请输入直播间ID"
+        android:inputType="none"
+        android:paddingLeft="12dp"
+        android:textColor="#0FFFF1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/room_id_text"
+        app:layout_constraintStart_toEndOf="@+id/room_id_text" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/welcome_role"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/host"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="模式"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/host"
+        app:layout_constraintTop_toBottomOf="@+id/host" />
+
+    <RadioButton
+        android:id="@+id/host"
+        android:layout_width="76dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/login_select_role"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:onClick="onClickRoleButton"
+        android:text="@string/welcome_anchor"
+        android:textColor="@color/role_color"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/vice"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <RadioButton
+        android:id="@+id/audiolink"
+        android:layout_width="114dp"
+        android:layout_height="30dp"
+        android:background="@drawable/login_select_role"
+        android:button="@null"
+        android:gravity="center"
+        android:onClick="onClickModeButton"
+        android:text="纯语音连麦"
+        android:textColor="@color/role_color"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/audience"
+        app:layout_constraintTop_toTopOf="@+id/videolink" />
+
+    <RadioButton
+        android:id="@+id/videolink"
+        android:layout_width="114dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/login_select_role"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:onClick="onClickModeButton"
+        android:text="音视频连麦"
+        android:textColor="@color/role_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <RadioButton
+        android:id="@+id/vice"
+        android:layout_width="76dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginStart="26dp"
+        android:background="@drawable/login_select_role"
+        android:button="@null"
+        android:gravity="center"
+        android:onClick="onClickRoleButton"
+        android:text="@string/welcome_auxiliary"
+        android:textColor="@color/role_color"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/audience"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/host"
+        app:layout_constraintTop_toTopOf="@+id/host" />
+
+    <RadioButton
+        android:id="@+id/audience"
+        android:layout_width="76dp"
+        android:layout_height="30dp"
+        android:background="@drawable/login_select_role"
+        android:button="@null"
+        android:gravity="center"
+        android:onClick="onClickRoleButton"
+        android:text="@string/welcome_audience"
+        android:textColor="@color/role_color"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/vice"
+        app:layout_constraintTop_toTopOf="@+id/vice" />
+
+    <TextView
+        android:id="@+id/company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/app_name"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/set" />
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/version_info"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/company" />
+
+    <TextView
+        android:id="@+id/sdk_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="sdk version:"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/version"
+        app:layout_constraintTop_toBottomOf="@+id/version" />
+
+</android.support.constraint.ConstraintLayout>
