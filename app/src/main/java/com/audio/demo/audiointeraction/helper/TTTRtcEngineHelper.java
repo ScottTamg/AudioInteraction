@@ -24,6 +24,7 @@ import com.audio.demo.audiointeraction.SplashActivity;
 import com.audio.demo.audiointeraction.bean.DisplayDevice;
 import com.audio.demo.audiointeraction.bean.EnterUserInfo;
 import com.audio.demo.audiointeraction.bean.VideoViewObj;
+import com.audio.demo.audiointeraction.utils.DensityUtils;
 import com.audio.demo.audiointeraction.utils.MyLog;
 import com.wushuangtech.bean.LocalAudioStats;
 import com.wushuangtech.bean.LocalVideoStats;
@@ -56,6 +57,8 @@ public class TTTRtcEngineHelper {
 
     public static final int RECORD_TYPE_FILE = 10;
     public static final int RECORD_TYPE_SHARE = 11;
+
+    private static Pattern ROOM_ID_PATTERN = Pattern.compile("[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]");
 
     private MainActivity mActivity;
     private TTTRtcEngine mTTTEngine;
@@ -100,9 +103,9 @@ public class TTTRtcEngineHelper {
             return false;
         }
 
-        Pattern p = Pattern.compile("[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]");
+//        Pattern p = Pattern.compile("[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]");
         String roomID = mRoomID.trim();
-        Matcher matcher = p.matcher(roomID);
+        Matcher matcher = ROOM_ID_PATTERN.matcher(roomID);
         if (matcher.matches()) {
             Toast.makeText(mContext, "房间ID输入不合法", Toast.LENGTH_SHORT).show();
             return false;
@@ -125,7 +128,7 @@ public class TTTRtcEngineHelper {
      * @param mLocalSeiList the m local sei list
      */
     public void initRemoteLayout(ArrayList<VideoViewObj> mLocalSeiList) {
-        LinearLayout remotely = mActivity.findViewById(R.id.main_remotely_parent);
+        /*LinearLayout remotely = mActivity.findViewById(R.id.main_remotely_parent);
         int[] screenData = DensityUtils.getScreenData(mActivity);
         mSurfaceWidth = screenData[0] / 3;
         mSurfaceHeight = mSurfaceWidth * 4 / 3;
@@ -237,7 +240,7 @@ public class TTTRtcEngineHelper {
                 speakMuteClick(obj);
             });
             mLocalSeiList.add(obj);
-        }
+        }*/
     }
 
     /**
@@ -408,7 +411,7 @@ public class TTTRtcEngineHelper {
                 if (!inRangeOfView(mRemoteDialog, ev)) {
                     mRemoteDialog.setVisibility(View.INVISIBLE);
                     if (mRemoteDialogBT != null) {
-                        mRemoteDialogBT.setImageResource(R.drawable.videoly_dialog_more_down);
+//                        mRemoteDialogBT.setImageResource(R.drawable.videoly_dialog_more_down);
                     }
                 }
             }

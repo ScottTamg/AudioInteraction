@@ -17,4 +17,12 @@
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
 
+    <!-- 直播 成员管理PopupWindow弹出/隐藏动画  -->
+    <style name="MyPopupWindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom
+        </item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom
+        </item>
+    </style>
+
 </resources>

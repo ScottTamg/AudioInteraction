@@ -13,4 +13,10 @@
     <color name="half_transparent">#40FFFFFF</color>
     <color name="role_selected">#003734</color>
     <color name="role_un_selected">#FFFFFF</color>
+    <color name="rgb_d8d8d8">#D8D8D8</color>
+    <color name="color_text_black">#5B5B5B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="md_blue_grey_50">#ECEFF1</color>
+    <color name="color_lm_disable_microphone">#FF3A3A</color>
+    <color name="color_lm_bg">#43FFE7</color>
 </resources>

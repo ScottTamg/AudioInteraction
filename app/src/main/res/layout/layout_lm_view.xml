@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp50"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_layout"
+        android:layout_width="@dimen/dp50"
+        android:layout_height="@dimen/dp50"
+        android:layout_gravity="center_horizontal">
+
+        <com.ttt.liveroom.widget.waveview.WaveView
+            android:id="@+id/iv_avatar_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="@dimen/dp40"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/iv_mute"
+            android:layout_width="@dimen/dp23"
+            android:layout_height="13dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:text="@string/lm_disable_microphone_text"
+            android:textColor="@color/color_lm_disable_microphone"
+            android:gravity="center"
+            android:textSize="7sp"
+            android:background="@drawable/shape_live_bg"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp10" />
+
+</LinearLayout>

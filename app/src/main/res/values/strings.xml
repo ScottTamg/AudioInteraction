@@ -55,4 +55,11 @@
     <string name="sp_videoinfo_resolution">分辨率</string>
     <string name="sp_videoinfo_rate">帧率</string>
     <string name="sp_videoinfo_codingformat">编码格式</string>
+    <string name="cancel">取消</string>
+    <string name="popup_lm_manage_exit">关闭</string>
+    <string name="popup_lm_manage_mute">静音</string>
+    <string name="popup_lm_manage_title">操作</string>
+    <string name="lm_disable_microphone_text">禁麦</string>
+    <string name="audio_lm_empty_name">虚位以待</string>
+    <string name="popup_lm_manage_unmute">取消静音</string>
 </resources>

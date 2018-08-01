@@ -191,6 +191,14 @@
             android:background="@color/transparent"
             android:orientation="vertical">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_lm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="#49000000"
+                android:paddingBottom="@dimen/dp5"
+                android:paddingTop="@dimen/dp5" />
         </LinearLayout>
 
         <ImageView
@@ -198,6 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/dibuyinying" />
+
 
     </RelativeLayout>
 
