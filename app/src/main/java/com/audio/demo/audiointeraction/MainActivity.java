@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.audio.demo.audiointeraction.bean.DisplayDevice;
 import com.audio.demo.audiointeraction.bean.EnterUserInfo;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
     private TTTRtcEngine mTTTEngine;
     private Context mContext;
 
-    public ArrayList<VideoViewObj> mLocalSeiList;
+    public VideoViewObj[] mLocalSeiList;
     public HashSet<Long> mMutedAudioUserID;
     public HashSet<Long> mMutedSpeakUserID;
     public List<EnterUserInfo> listData;
@@ -166,8 +167,8 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         mMoreInfoDialog.dismiss();
         mMusicListDialog.dismiss();
         LocalConfig.mUserEnterOrder.clear();
-        for (int i = 0; i < mLocalSeiList.size(); i++) {
-            VideoViewObj videoViewObj = mLocalSeiList.get(i);
+        for (int i = 0; i < mLocalSeiList.length; i++) {
+            VideoViewObj videoViewObj = mLocalSeiList[i];
             videoViewObj.clear();
         }
 
@@ -264,9 +265,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         mShowingDevices = new ConcurrentHashMap<>();
         mMutedAudioUserID = new HashSet<>();
         mMutedSpeakUserID = new HashSet<>();
-        mLocalSeiList = new ArrayList<>(12);
+        mLocalSeiList = new VideoViewObj[12];
 
-//        mTTTRtcEngineHelper.initRemoteLayout(mLocalSeiList);
+        mTTTRtcEngineHelper.initRemoteLayout(mLocalSeiList);
 
         if (LocalConfig.mRole == Constants.CLIENT_ROLE_AUDIENCE) {
             LocalConfig.mAudience++;
@@ -281,11 +282,11 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         }
 
         if (LocalConfig.mRoomMode == SplashActivity.AUDIO_MODE) {
-            for (VideoViewObj obj : mLocalSeiList) {
-                obj.mRootHead.setImageResource(R.drawable.audiobg);
-                obj.mRemoteUserID.setTextColor(Color.rgb(137, 137, 137));
+//            for (VideoViewObj obj : mLocalSeiList) {
+//                obj.mRootHead.setImageResource(R.drawable.audiobg);
+//                obj.mRemoteUserID.setTextColor(Color.rgb(137, 137, 137));
 //                ((TextView) obj.mContentRoot.findViewById(R.id.videoly_audio_down)).setTextColor(Color.rgb(137, 137, 137));
-            }
+//            }
         }
 
         if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR && LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
@@ -332,10 +333,10 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR) {
                 mAudioChannel.setImageResource(R.drawable.mainly_btn_headset_selector);
             } else {
-                for (int i = 0; i < mLocalSeiList.size(); i++) {
-                    VideoViewObj videoCusSei = mLocalSeiList.get(i);
+                for (int i = 0; i < mLocalSeiList.length; i++) {
+                    VideoViewObj videoCusSei = mLocalSeiList[i];
                     if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
-                        videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
+//                        videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
                         break;
                     }
                 }
@@ -459,9 +460,11 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         mRvLmLayout.addItemDecoration(new SpaceItemDecoration(20));
         LmViewAdapter.LmViewItemListener listener = new LmViewAdapter.LmViewItemListener() {
             @Override
-            public void onItemClick(VideoViewObj bean) {
-                if (bean.getUserId().equals(mUserInfo.getId())) {
-                    showLmUserManage(bean, LmDataBean.MASTER_AUDIENCE);
+            public void onItemClick(int position, VideoViewObj bean) {
+                if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR) {
+                    showLmUserManage(bean, true);
+                } else if (bean.mBindUid == LocalConfig.mLoginUserID) {
+                    showLmUserManage(bean, false);
                 }
             }
         };
@@ -472,35 +475,27 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
     /**
      * 显示连麦管理弹出框
      */
-    protected void showLmUserManage(VideoViewObj bean, String isMaster) {
+    protected void showLmUserManage(VideoViewObj bean, boolean isMaster) {
         if (mLmManagePopup == null) {
             LmManagePopup.LmManagePopupListener listener = new LmManagePopup.LmManagePopupListener() {
                 @Override
                 public void onMute(VideoViewObj bean) {
-                    if (LmDataBean.MUTE_OPEN.equals(bean.getMute()) && !isMaster.equals(bean.getIsMaster())) {
-                        toastShort(LmDataBean.MASTER_ANCHOR.equals(isMaster)
-                                ? R.string.popup_lm_mute_error_anchor : R.string.popup_lm_mute_error_audience);
+                    if (!bean.mIsMuteRemote && !isMaster) {
+                        Toast.makeText(mContext, getString(!isMaster
+                                ? R.string.popup_lm_mute_error_anchor : R.string.popup_lm_mute_error_audience),
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String mute;
-                    if (LmDataBean.MUTE_CLOSE.equals(bean.getMute())) {
-                        mute = LmDataBean.MUTE_OPEN;
+                    if (bean.mIsMuteRemote) {
+                        mTTTEngine.muteRemoteSpeaking((int) bean.mBindUid, false);
                     } else {
-                        mute = LmDataBean.MUTE_CLOSE;
+                        mTTTEngine.muteRemoteSpeaking((int) bean.mBindUid, true);
                     }
-                    wsService.sendRequest(WsObjectPool.newMuteReq(getContext(), mAnchorId,
-                            mLiveId, bean.getUserId(), mute, isMaster));
                 }
 
                 @Override
                 public void onExit(VideoViewObj bean) {
-                    if (LmDataBean.MASTER_ANCHOR.equals(isMaster)) {
-                        wsService.sendRequest(WsObjectPool.disConnectLmRequest(
-                                getContext(), mLiveId, mAnchorId, bean.getUserId()));
-                    } else {
-                        wsService.sendRequest(WsObjectPool.newCloseCallSecondaryRequest(
-                                getContext(), mAnchorId, mLiveId, bean.getUserId()));
-                    }
+                    mTTTEngine.kickChannelUser(bean.mBindUid);
                 }
             };
             mLmManagePopup = new LmManagePopup(mContext, bean, listener);
@@ -511,6 +506,10 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             mLmManagePopup.showAtLocation(mFullScreenShowView,
                     Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         }
+    }
+
+    private void updateLmUserMuteState() {
+        mLmViewAdapter.setList(mLocalSeiList);
     }
 
     private class MyLocalBroadcastReceiver extends BroadcastReceiver {
@@ -727,18 +726,20 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         MyLog.i("OnRemoteAudioMuted CALL_BACK_ON_MUTE_AUDIO start! .... " + mJniObjs.mUid
                                 + " | mIsMuteAuido : " + mIsMuteAuido);
                         boolean mIsFound = false;
-                        for (int i = 0; i < mLocalSeiList.size(); i++) {
-                            VideoViewObj videoCusSei = mLocalSeiList.get(i);
+                        for (int i = 0; i < mLocalSeiList.length; i++) {
+                            VideoViewObj videoCusSei = mLocalSeiList[i];
                             if (videoCusSei.mBindUid == muteUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsMuteRemote = mIsMuteAuido;
-                                if (mIsMuteAuido || videoCusSei.mIsRemoteDisableAudio) {
-                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
-                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
-                                } else {
-                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
-                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                                }
+                                updateLmUserMuteState();
+
+//                                if (mIsMuteAuido || videoCusSei.mIsRemoteDisableAudio) {
+//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
+//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
+//                                } else {
+//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
+//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                                }
                                 break;
                             }
                         }
@@ -755,17 +756,19 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         boolean mIsSpeakingMute = mJniObjs.mIsDisableAudio;
                         mIsFound = false;
                         MyLog.i("CALL_BACK_ON_SPEAK_MUTE_AUDIO " + mJniObjs.mUid + " | mIsMuteAuido : " + mIsSpeakingMute);
-                        for (int i = 0; i < mLocalSeiList.size(); i++) {
-                            VideoViewObj videoCusSei = mLocalSeiList.get(i);
+                        for (int i = 0; i < mLocalSeiList.length; i++) {
+                            VideoViewObj videoCusSei = mLocalSeiList[i];
                             if (videoCusSei.mBindUid == speakUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsRemoteDisableAudio = mIsSpeakingMute;
+                                updateLmUserMuteState();
+
                                 if (mIsSpeakingMute) {
-                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
-                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
+//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
+//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
                                 } else {
-                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
-                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
+//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
                                     videoCusSei.mIsMuteRemote = false;
                                     if (speakUid == LocalConfig.mLoginUserID) {
                                         mTTTEngine.muteLocalAudioStream(false);
@@ -803,23 +806,24 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 }
                             }
                         } else if (LocalConfig.mRole == CLIENT_ROLE_BROADCASTER) {
-                            for (int i = 0; i < mLocalSeiList.size(); i++) {
-                                VideoViewObj videoCusSei = mLocalSeiList.get(i);
+                            for (int i = 0; i < mLocalSeiList.length; i++) {
+                                VideoViewObj videoCusSei = mLocalSeiList[i];
                                 if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
                                     if (mAudioRoute == Constants.AUDIO_ROUTE_SPEAKER) {
                                         mIsHeadset = false;
-                                        if (videoCusSei.mIsMuteRemote) {
-                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
-                                        } else {
-                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                                        }
+                                        updateLmUserMuteState();
+//                                        if (videoCusSei.mIsMuteRemote) {
+//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+//                                        } else {
+//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                                        }
                                     } else {
                                         mIsHeadset = true;
-                                        if (videoCusSei.mIsMuteRemote) {
-                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
-                                        } else {
-                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
-                                        }
+//                                        if (videoCusSei.mIsMuteRemote) {
+//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
+//                                        } else {
+//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
+//                                        }
                                     }
                                     break;
                                 }

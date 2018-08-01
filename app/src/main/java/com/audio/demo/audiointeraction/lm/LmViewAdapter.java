@@ -27,28 +27,50 @@ import java.util.List;
 public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHolder> {
 
     private Context mContext;
-    private List<VideoViewObj> mList;
+    private VideoViewObj[] mList;
     private LmViewItemListener mListener;
 
-    public LmViewAdapter(Context context, List<VideoViewObj> list, LmViewItemListener listener) {
+    public LmViewAdapter(Context context, VideoViewObj[] list, LmViewItemListener listener) {
         this.mContext = context;
         this.mList = list;
         this.mListener = listener;
     }
 
-    public void setList(List<VideoViewObj> list) {
+    public void setList(VideoViewObj[] list) {
         mList = list;
         notifyDataSetChanged();
     }
 
     public void addData(VideoViewObj dataBean) {
-        mList.add(dataBean);
+        int index = -1;
+        for (int i = 0; i < mList.length; i++) {
+            if (mList[i] == null) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            mList[index] = dataBean;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeData(int index) {
+        mList[index] = null;
         notifyDataSetChanged();
     }
 
     public void removeData(VideoViewObj dataBean) {
-        mList.remove(dataBean);
-        notifyDataSetChanged();
+        int index = -1;
+        for (int i = 0; i < mList.length; i++) {
+            if (dataBean.mBindUid == mList[i].mBindUid) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            this.removeData(index);
+        }
     }
 
     @NonNull
@@ -65,7 +87,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
         holder.ivAvatarBg.setColor(mContext.getResources().getColor(R.color.color_lm_bg));
         holder.ivAvatarBg.setInterpolator(new LinearOutSlowInInterpolator());
 
-        if (position >= mList.size()) {
+        if (mList[position] == null) {
             holder.ivAvatarBg.setVisibility(View.INVISIBLE);
             holder.ivMute.setVisibility(View.GONE);
             holder.ivAvatarBg.stop();
@@ -74,9 +96,9 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
             holder.ivAvatar.setImageResource(R.drawable.moremtupian);
-            holder.tvNickname.setText(mList.get(position).getNickName());
+            holder.tvNickname.setText(String.valueOf(mList[position].mBindUid));
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.color_lm_bg));
-            if (LmDataBean.MUTE_CLOSE.equals(mList.get(position).getMute())) {
+            if ((mList[position].mIsMuted)) {
                 holder.ivAvatarBg.setVisibility(View.VISIBLE);
                 holder.ivMute.setVisibility(View.GONE);
                 holder.ivAvatarBg.start();
@@ -87,7 +109,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
             }
         }
 
-        holder.itemView.setOnClickListener(v -> mListener.onItemClick(mList.get(position)));
+        holder.itemView.setOnClickListener(v -> mListener.onItemClick(position, mList[position]));
     }
 
     @Override
@@ -115,6 +137,6 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
     }
 
     public interface LmViewItemListener {
-        void onItemClick(VideoViewObj bean);
+        void onItemClick(int position, VideoViewObj bean);
     }
 }

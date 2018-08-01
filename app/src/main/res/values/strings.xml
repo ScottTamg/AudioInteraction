@@ -62,4 +62,6 @@
     <string name="lm_disable_microphone_text">禁麦</string>
     <string name="audio_lm_empty_name">虚位以待</string>
     <string name="popup_lm_manage_unmute">取消静音</string>
+    <string name="popup_lm_mute_error_audience">主播已对你设置静音</string>
+    <string name="popup_lm_mute_error_anchor">用户已静音</string>
 </resources>

@@ -17,23 +17,29 @@ public class VideoViewObj {
 
     public boolean mIsMuteRemote;
     public boolean mIsRemoteDisableAudio;
-    public ImageView mReserveCamera;
-    public TextView mRemoteUserID;
-    public TextView mMuteVoiceBT;
-    public ViewGroup mRoot;
-    public View mRootBG;
-    public View mContentRoot;
-    public ImageView mSpeakImage;
-    public ImageView mRootHead;
+//    public ImageView mReserveCamera;
+//    public TextView mRemoteUserID;
+//    public TextView mMuteVoiceBT;
+//    public ViewGroup mRoot;
+//    public View mRootBG;
+//    public View mContentRoot;
+//    public ImageView mSpeakImage;
+//    public ImageView mRootHead;
+
+
+    public VideoViewObj(int index) {
+        mIndex = index;
+        mBindUid = 0;
+    }
 
     public void clear() {
-        mRoot = null;
-        mRootBG = null;
-        mContentRoot = null;
-        mSpeakImage = null;
-        mReserveCamera = null;
-        mRemoteUserID = null;
-        mMuteVoiceBT = null;
+//        mRoot = null;
+//        mRootBG = null;
+//        mContentRoot = null;
+//        mSpeakImage = null;
+//        mReserveCamera = null;
+//        mRemoteUserID = null;
+//        mMuteVoiceBT = null;
         clearData();
     }
 

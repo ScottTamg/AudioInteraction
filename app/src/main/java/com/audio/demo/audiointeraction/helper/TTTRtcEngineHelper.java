@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 public class TTTRtcEngineHelper {
 
-    public static final int AUTHOR_MAX_NUM = 6;
+    public static final int AUTHOR_MAX_NUM = 12;
     public static final int VOLUME_MAX_NUM = 9;
 
     public static final int RECORD_TYPE_FILE = 10;
@@ -127,7 +127,8 @@ public class TTTRtcEngineHelper {
      *
      * @param mLocalSeiList the m local sei list
      */
-    public void initRemoteLayout(ArrayList<VideoViewObj> mLocalSeiList) {
+    public void initRemoteLayout(VideoViewObj[] mLocalSeiList) {
+
         /*LinearLayout remotely = mActivity.findViewById(R.id.main_remotely_parent);
         int[] screenData = DensityUtils.getScreenData(mActivity);
         mSurfaceWidth = screenData[0] / 3;
@@ -486,9 +487,9 @@ public class TTTRtcEngineHelper {
                 long userID = next.getKey();
                 if (tempUid == userID) {
                     DisplayDevice value = next.getValue();
-                    View mVideoDownSpeedShow = value.getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down);
-                    mActivity.setTextViewContent((TextView) mVideoDownSpeedShow, R.string.videoly_videodown,
-                            String.valueOf(mRemoteVideoStats.getReceivedBitrate()));
+//                    View mVideoDownSpeedShow = value.getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down);
+//                    mActivity.setTextViewContent((TextView) mVideoDownSpeedShow, R.string.videoly_videodown,
+//                            String.valueOf(mRemoteVideoStats.getReceivedBitrate()));
                     break;
                 }
             }
@@ -511,8 +512,8 @@ public class TTTRtcEngineHelper {
                 long userID = next.getKey();
                 if (tempAudioUid == userID) {
                     DisplayDevice valsue = next.getValue();
-                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down);
-                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.videoly_audiodown, String.valueOf(mRemoteAudioStats.getReceivedBitrate()));
+//                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down);
+//                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.videoly_audiodown, String.valueOf(mRemoteAudioStats.getReceivedBitrate()));
                     break;
                 }
             }
@@ -534,8 +535,8 @@ public class TTTRtcEngineHelper {
                 long userID = next.getKey();
                 if (LocalConfig.mLoginUserID == userID) {
                     DisplayDevice valsue = next.getValue();
-                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down);
-                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.main_videoups, String.valueOf(mLocalVideoStats.getSentBitrate()));
+//                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down);
+//                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.main_videoups, String.valueOf(mLocalVideoStats.getSentBitrate()));
                     break;
                 }
             }
@@ -557,8 +558,8 @@ public class TTTRtcEngineHelper {
                 long userID = next.getKey();
                 if (LocalConfig.mLoginUserID == userID) {
                     DisplayDevice valsue = next.getValue();
-                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down);
-                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.main_audioup, String.valueOf(mLocalAudioStats.getSentBitrate()));
+//                    View mAudioDownSpeedShow = valsue.getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down);
+//                    mActivity.setTextViewContent((TextView) mAudioDownSpeedShow, R.string.main_audioup, String.valueOf(mLocalAudioStats.getSentBitrate()));
                     break;
                 }
             }
@@ -606,44 +607,44 @@ public class TTTRtcEngineHelper {
                 }
             }
         } else {
-            for (final VideoViewObj obj : mActivity.mLocalSeiList) {
-                if (obj.mBindUid == volumeUserID && obj.mSpeakImage != null) {
-                    if (obj.mIsMuteRemote || obj.mIsRemoteDisableAudio) {
-                        return;
-                    }
-
-                    if (obj.mBindUid == LocalConfig.mLoginUserID) {
-                        if (mActivity.mIsHeadset) {
-                            if (volumeLevel >= 0 && volumeLevel <= 3) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
-                            } else if (volumeLevel > 3 && volumeLevel <= 6) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_middle_selector);
-                            } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_big_selector);
-                            }
-                        } else {
-                            if (volumeLevel >= 0 && volumeLevel <= 3) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                            } else if (volumeLevel > 3 && volumeLevel <= 6) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_middle_selector);
-                            } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
-                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_big_selector);
-                            }
-                        }
-                    } else {
-                        if (volumeLevel == 0) {
-                            obj.mSpeakImage.setImageResource(R.drawable.audio_xiao);
-                        } else if (volumeLevel > 0 && volumeLevel <= 3) {
-                            obj.mSpeakImage.setImageResource(R.drawable.audio_xiao);
-                        } else if (volumeLevel > 3 && volumeLevel <= 6) {
-                            obj.mSpeakImage.setImageResource(R.drawable.audio_zhong);
-                        } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
-                            obj.mSpeakImage.setImageResource(R.drawable.audio_da);
-                        }
-                    }
-                    break;
-                }
-            }
+//            for (final VideoViewObj obj : mActivity.mLocalSeiList) {
+//                if (obj.mBindUid == volumeUserID && obj.mSpeakImage != null) {
+//                    if (obj.mIsMuteRemote || obj.mIsRemoteDisableAudio) {
+//                        return;
+//                    }
+//
+//                    if (obj.mBindUid == LocalConfig.mLoginUserID) {
+//                        if (mActivity.mIsHeadset) {
+//                            if (volumeLevel >= 0 && volumeLevel <= 3) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
+//                            } else if (volumeLevel > 3 && volumeLevel <= 6) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_middle_selector);
+//                            } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_big_selector);
+//                            }
+//                        } else {
+//                            if (volumeLevel >= 0 && volumeLevel <= 3) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                            } else if (volumeLevel > 3 && volumeLevel <= 6) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_middle_selector);
+//                            } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
+//                                obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_big_selector);
+//                            }
+//                        }
+//                    } else {
+//                        if (volumeLevel == 0) {
+//                            obj.mSpeakImage.setImageResource(R.drawable.audio_xiao);
+//                        } else if (volumeLevel > 0 && volumeLevel <= 3) {
+//                            obj.mSpeakImage.setImageResource(R.drawable.audio_xiao);
+//                        } else if (volumeLevel > 3 && volumeLevel <= 6) {
+//                            obj.mSpeakImage.setImageResource(R.drawable.audio_zhong);
+//                        } else if (volumeLevel > 6 && volumeLevel <= VOLUME_MAX_NUM) {
+//                            obj.mSpeakImage.setImageResource(R.drawable.audio_da);
+//                        }
+//                    }
+//                    break;
+//                }
+//            }
         }
     }
 
@@ -790,8 +791,8 @@ public class TTTRtcEngineHelper {
      * @return the list
      */
     private VideoViewObj getRemoteViewParentLayout() {
-        for (int i = 0; i < mActivity.mLocalSeiList.size(); i++) {
-            VideoViewObj videoCusSei = mActivity.mLocalSeiList.get(i);
+        for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
+            VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
             if (!videoCusSei.mIsUsing) {
                 videoCusSei.mIsUsing = true;
                 return videoCusSei;
@@ -808,8 +809,8 @@ public class TTTRtcEngineHelper {
      * @return the list
      */
     private VideoViewObj getRemoteViewParentLayout(EnterUserInfo info) {
-        for (int i = 0; i < mActivity.mLocalSeiList.size(); i++) {
-            VideoViewObj videoCusSei = mActivity.mLocalSeiList.get(i);
+        for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
+            VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
             if (videoCusSei.mIndex == info.mShowIndex) {
                 videoCusSei.mIsUsing = true;
                 return videoCusSei;
@@ -819,13 +820,13 @@ public class TTTRtcEngineHelper {
     }
 
     private boolean checkVideoExist(int showIndex) {
-        VideoViewObj videoViewObj = mActivity.mLocalSeiList.get(showIndex);
+        VideoViewObj videoViewObj = mActivity.mLocalSeiList[showIndex];
         return videoViewObj.mIsUsing;
     }
 
     private boolean checkVideoExist(long uid) {
-        for (int i = 0; i < mActivity.mLocalSeiList.size(); i++) {
-            VideoViewObj videoCusSei = mActivity.mLocalSeiList.get(i);
+        for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
+            VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
             if (videoCusSei.mIsUsing && videoCusSei.mBindUid == uid) {
                 return true;
             }
@@ -837,22 +838,26 @@ public class TTTRtcEngineHelper {
         DisplayDevice mRemoteDisplayDevice = mActivity.mShowingDevices.remove(uid);
         if (mRemoteDisplayDevice != null) {
             VideoViewObj videoCusSei = null;
-            for (int i = 0; i < mActivity.mLocalSeiList.size(); i++) {
-                videoCusSei = mActivity.mLocalSeiList.get(i);
+            int index = -1;
+            for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
+                videoCusSei = mActivity.mLocalSeiList[i];
                 if (videoCusSei.mBindUid == uid) {
+                    index = i;
                     videoCusSei.clearData();
                     break;
                 }
             }
 
             if (videoCusSei != null) {
-                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
-                    SurfaceView childAt = (SurfaceView) videoCusSei.mRoot.getChildAt(0);
-                    videoCusSei.mRoot.removeView(childAt);
-                    videoCusSei.mReserveCamera.setVisibility(View.INVISIBLE);
-                }
-                videoCusSei.mContentRoot.setVisibility(View.INVISIBLE);
-                videoCusSei.mRootBG.setVisibility(View.VISIBLE);
+                mActivity.mLocalSeiList[index] = null;
+
+//                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
+//                    SurfaceView childAt = (SurfaceView) videoCusSei.mRoot.getChildAt(0);
+//                    videoCusSei.mRoot.removeView(childAt);
+//                    videoCusSei.mReserveCamera.setVisibility(View.INVISIBLE);
+//                }
+//                videoCusSei.mContentRoot.setVisibility(View.INVISIBLE);
+//                videoCusSei.mRootBG.setVisibility(View.VISIBLE);
             }
         }
     }
