@@ -5,11 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneStateListener;
@@ -288,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
 
     private void initData() {
         listData = new ArrayList<>();
-        mShowingDevices = new ConcurrentHashMap<>();
+        mShowingDevices = new ConcurrentHashMap<>(12);
         mMutedAudioUserID = new HashSet<>();
         mMutedSpeakUserID = new HashSet<>();
         mLocalSeiList = new VideoViewObj[12];
@@ -361,6 +360,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             } else {
                 for (int i = 0; i < mLocalSeiList.length; i++) {
                     VideoViewObj videoCusSei = mLocalSeiList[i];
+                    if (videoCusSei == null) {
+                        continue;
+                    }
                     if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
 //                        videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
                         break;
@@ -538,6 +540,22 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         mLmViewAdapter.setList(mLocalSeiList);
     }
 
+    private void removeLmUser(long userId) {
+        int index = -1;
+        for (int i = 0; i < mLocalSeiList.length; i++) {
+            if (mLocalSeiList[i] == null) {
+                continue;
+            }
+            if (mLocalSeiList[i].mIsUsing && mLocalSeiList[i].mBindUid == userId) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            mLmViewAdapter.removeData(index);
+        }
+    }
+
     private class MyLocalBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -650,6 +668,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 LocalConfig.mAudience--;
                             } else if (enterUserInfo.getRole() == CLIENT_ROLE_BROADCASTER) {
                                 LocalConfig.mAuthorSize--;
+                                removeLmUser(offLineUserID);
                             }
                             mTTTRtcEngineHelper.mRemoteUserLastVideoData.remove(enterUserInfo.getId());
                             mTTTRtcEngineHelper.mRemoteUserLastAudioData.remove(enterUserInfo.getId());
@@ -840,6 +859,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         } else if (LocalConfig.mRole == CLIENT_ROLE_BROADCASTER) {
                             for (int i = 0; i < mLocalSeiList.length; i++) {
                                 VideoViewObj videoCusSei = mLocalSeiList[i];
+                                if (videoCusSei == null) {
+                                    continue;
+                                }
                                 if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
                                     if (mAudioRoute == Constants.AUDIO_ROUTE_SPEAKER) {
                                         mIsHeadset = false;

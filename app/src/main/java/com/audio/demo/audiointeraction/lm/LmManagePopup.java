@@ -61,7 +61,7 @@ public class LmManagePopup extends PopupWindow implements View.OnTouchListener,
     }
 
     private void initData() {
-        if (mBean.mIsMuteRemote) {
+        if (!mBean.mIsMuteRemote) {
             mTvMute.setText(mContext.getString(R.string.popup_lm_manage_mute));
         } else {
             mTvMute.setText(mContext.getString(R.string.popup_lm_manage_unmute));

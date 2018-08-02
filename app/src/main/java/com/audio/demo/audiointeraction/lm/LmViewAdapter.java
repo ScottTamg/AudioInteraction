@@ -16,8 +16,6 @@ import com.audio.demo.audiointeraction.R;
 import com.audio.demo.audiointeraction.bean.VideoViewObj;
 import com.audio.demo.audiointeraction.widget.WaveView;
 
-import java.util.List;
-
 
 /**
  * @author txw
@@ -56,7 +54,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
     }
 
     public void removeData(int index) {
-        mList[index] = null;
+        mList[index] = new VideoViewObj(index);
         notifyDataSetChanged();
     }
 
@@ -98,7 +96,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
             holder.ivAvatar.setImageResource(R.drawable.moremtupian);
             holder.tvNickname.setText(String.valueOf(mList[position].mBindUid));
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.color_lm_bg));
-            if ((mList[position].mIsMuted)) {
+            if (!mList[position].mIsMuteRemote) {
                 holder.ivAvatarBg.setVisibility(View.VISIBLE);
                 holder.ivMute.setVisibility(View.GONE);
                 holder.ivAvatarBg.start();

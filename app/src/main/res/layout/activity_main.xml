@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,7 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dingbuyinying" />
+        android:background="@drawable/dingbuyinying"/>
 
     <RelativeLayout
         android:id="@+id/main_view_bg"
@@ -21,23 +22,22 @@
             android:id="@+id/audio_bg"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
             android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="70dp">
 
             <com.audio.demo.audiointeraction.widget.WaveView
                 android:id="@+id/wv_audio_bg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
             <ImageView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
+                android:layout_width="86dp"
+                android:layout_height="87dp"
                 android:layout_gravity="center"
                 android:src="@drawable/audiobg"
-                android:visibility="visible" />
+                android:visibility="visible"/>
         </FrameLayout>
-
 
         <ScrollView
             android:id="@+id/main_btn_listly"
@@ -55,38 +55,38 @@
                     android:id="@+id/main_btn_camera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
                     android:layout_marginLeft="@dimen/main_btn_com_margin_20"
-                    android:src="@drawable/mainly_btn_camera_selector" />
+                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+                    android:src="@drawable/mainly_btn_camera_selector"/>
 
                 <ImageView
                     android:id="@+id/main_btn_audio_channel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/main_btn_camera"
-                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
                     android:layout_marginLeft="@dimen/main_btn_com_margin_20"
                     android:layout_marginRight="@dimen/main_btn_com_margin_20"
-                    android:src="@drawable/mianti" />
+                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+                    android:src="@drawable/mianti"/>
 
                 <ImageView
                     android:id="@+id/main_btn_music_channel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/main_btn_audio_channel"
-                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
                     android:layout_marginLeft="@dimen/main_btn_com_margin_20"
                     android:layout_marginRight="@dimen/main_btn_com_margin_20"
-                    android:src="@drawable/mainly_btn_music_selector" />
+                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+                    android:src="@drawable/mainly_btn_music_selector"/>
 
                 <ImageView
                     android:id="@+id/main_btn_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/main_btn_music_channel"
-                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
                     android:layout_marginLeft="@dimen/main_btn_com_margin_20"
-                    android:src="@drawable/mainly_btn_more_selector" />
+                    android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+                    android:src="@drawable/mainly_btn_more_selector"/>
 
                 <TextView
                     android:id="@+id/main_btn_video_recorder_time"
@@ -99,7 +99,7 @@
                     android:gravity="center"
                     android:text="00:00:00"
                     android:textSize="9.6sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
             </RelativeLayout>
         </ScrollView>
@@ -114,7 +114,7 @@
             android:singleLine="true"
             android:text="房号："
             android:textColor="@color/font_com_color_white"
-            android:textSize="@dimen/font_com_size_12" />
+            android:textSize="@dimen/font_com_size_12"/>
 
         <TextView
             android:id="@+id/main_btn_host"
@@ -126,7 +126,7 @@
             android:singleLine="true"
             android:text="主播："
             android:textColor="@color/font_com_color_white"
-            android:textSize="@dimen/font_com_size_12" />
+            android:textSize="@dimen/font_com_size_12"/>
 
         <LinearLayout
             android:id="@+id/linearlayout2"
@@ -147,7 +147,7 @@
                 android:singleLine="true"
                 android:text="角色："
                 android:textColor="@color/font_com_color_white"
-                android:textSize="@dimen/font_com_size_12" />
+                android:textSize="@dimen/font_com_size_12"/>
 
             <TextView
                 android:id="@+id/main_btn_audioup"
@@ -158,7 +158,7 @@
                 android:singleLine="true"
                 android:text="@string/main_audioup"
                 android:textColor="@color/font_com_color_white"
-                android:textSize="@dimen/font_com_size_12" />
+                android:textSize="@dimen/font_com_size_12"/>
 
             <TextView
                 android:id="@+id/main_btn_videoup"
@@ -169,38 +169,38 @@
                 android:singleLine="true"
                 android:text="@string/main_videoups"
                 android:textColor="@color/font_com_color_white"
-                android:textSize="@dimen/font_com_size_12" />
+                android:textSize="@dimen/font_com_size_12"/>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/main_btn_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/main_btn_listly"
-            android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/main_btn_com_margin_20"
+            android:layout_marginBottom="@dimen/main_btn_com_margin_24"
             android:paddingTop="6dp"
-            android:src="@drawable/mainly_btn_exit_selector" />
+            android:src="@drawable/mainly_btn_exit_selector"/>
 
         <ImageView
             android:id="@+id/main_btn_cannel_music"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/main_btn_exit"
-            android:layout_marginBottom="@dimen/main_btn_com_margin_24"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/main_btn_com_margin_20"
+            android:layout_marginBottom="@dimen/main_btn_com_margin_24"
             android:paddingTop="6dp"
             android:src="@drawable/mainly_btn_cannel_music_selector"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/main_remotely_parent"
             android:layout_width="match_parent"
             android:layout_height="274dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
             android:background="@color/transparent"
             android:gravity="bottom"
             android:orientation="vertical">
@@ -211,15 +211,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:background="#49000000"
-                android:paddingBottom="@dimen/dp5"
-                android:paddingTop="@dimen/dp5" />
+                android:paddingTop="@dimen/dp5"
+                android:paddingBottom="@dimen/dp5"/>
         </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/dibuyinying" />
+            android:background="@drawable/dibuyinying"/>
 
     </RelativeLayout>
 

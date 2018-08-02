@@ -9,12 +9,8 @@ import android.util.LongSparseArray;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.audio.demo.audiointeraction.LocalConfig;
@@ -370,6 +366,9 @@ public class TTTRtcEngineHelper {
         for (EnterUserInfo value : mInfos) {
             for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
                 VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
+                if (videoCusSei == null) {
+                    continue;
+                }
                 if (videoCusSei.mIsUsing && videoCusSei.mBindUid == value.getId()) {
                     if (value.mShowIndex != videoCusSei.mIndex) {
                         adJustRemoteViewDisplay(false, value);
@@ -796,6 +795,9 @@ public class TTTRtcEngineHelper {
     private VideoViewObj getRemoteViewParentLayout() {
         for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
             VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
+            if (videoCusSei == null) {
+                continue;
+            }
             if (!videoCusSei.mIsUsing) {
                 videoCusSei.mIsUsing = true;
                 return videoCusSei;
@@ -814,6 +816,9 @@ public class TTTRtcEngineHelper {
     private VideoViewObj getRemoteViewParentLayout(EnterUserInfo info) {
         for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
             VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
+            if (videoCusSei == null) {
+                continue;
+            }
             if (videoCusSei.mIndex == info.mShowIndex) {
                 videoCusSei.mIsUsing = true;
                 return videoCusSei;
@@ -824,7 +829,7 @@ public class TTTRtcEngineHelper {
 
     private boolean checkVideoExist(int showIndex) {
         VideoViewObj videoViewObj = mActivity.mLocalSeiList[showIndex];
-        return videoViewObj.mIsUsing;
+        return videoViewObj == null ? false : videoViewObj.mIsUsing;
     }
 
     private boolean checkVideoExist(long uid) {
@@ -847,6 +852,9 @@ public class TTTRtcEngineHelper {
             int index = -1;
             for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
                 videoCusSei = mActivity.mLocalSeiList[i];
+                if (videoCusSei == null) {
+                    continue;
+                }
                 if (videoCusSei.mBindUid == uid) {
                     index = i;
                     videoCusSei.clearData();
@@ -855,7 +863,7 @@ public class TTTRtcEngineHelper {
             }
 
             if (videoCusSei != null) {
-                mActivity.mLocalSeiList[index] = null;
+                mActivity.mLocalSeiList[index] = new VideoViewObj(index);
 
 //                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
 //                    SurfaceView childAt = (SurfaceView) videoCusSei.mRoot.getChildAt(0);
