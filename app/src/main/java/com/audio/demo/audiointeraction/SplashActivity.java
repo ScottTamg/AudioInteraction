@@ -70,6 +70,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
         mContext = this;
 
@@ -78,6 +79,19 @@ public class SplashActivity extends AppCompatActivity {
         initView();
 
         checkPermission();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyLog.d("SplashActivity onDestroy....");
+        TTTRtcEngine.destroy();
+        try {
+            unregisterReceiver(mLocalBroadcast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
     }
 
     private void initView() {
@@ -96,7 +110,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void initStatusBar() {
         //去掉标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //状态栏透明
         StatusBarUtil.setTranslucent(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,

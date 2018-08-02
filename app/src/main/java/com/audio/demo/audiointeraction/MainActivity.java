@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +19,7 @@ import android.view.Gravity;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -37,6 +40,8 @@ import com.audio.demo.audiointeraction.lm.LmManagePopup;
 import com.audio.demo.audiointeraction.lm.LmViewAdapter;
 import com.audio.demo.audiointeraction.lm.SpaceItemDecoration;
 import com.audio.demo.audiointeraction.utils.MyLog;
+import com.audio.demo.audiointeraction.widget.WaveView;
+import com.jaeger.library.StatusBarUtil;
 import com.wushuangtech.bean.VideoCompositingLayout;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.TTTRtcEngine;
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
     public TextView mRecordScreen;
     public ScrollView mScrollView;
     public ViewGroup mFullScreenShowView;
+    private WaveView mWaveView;
 
     private MoreInfoDialog mMoreInfoDialog;
     private MusicListDialog mMusicListDialog;
@@ -111,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         mTTTEngine = TTTRtcEngine.getInstance();
         mTTTRtcEngineHelper = new TTTRtcEngineHelper(this);
 
+        initStatusBar();
         initView();
         initData();
         initEngine();
@@ -169,7 +176,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         LocalConfig.mUserEnterOrder.clear();
         for (int i = 0; i < mLocalSeiList.length; i++) {
             VideoViewObj videoViewObj = mLocalSeiList[i];
-            videoViewObj.clear();
+            if (videoViewObj != null) {
+                videoViewObj.clear();
+            }
         }
 
         if (mPhoneListener != null && mTelephonyManager != null) {
@@ -197,6 +206,15 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         }
     }
 
+    private void initStatusBar() {
+        //去掉标题栏
+//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //状态栏透明
+        StatusBarUtil.setTranslucent(this);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
     private void initView() {
         mAudioSpeedShow = findViewById(R.id.main_btn_audioup);
         mVideoSpeedShow = findViewById(R.id.main_btn_videoup);
@@ -215,15 +233,19 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             mReversalCamera.setVisibility(View.GONE);
             mVideoSpeedShow.setVisibility(View.GONE);
             findViewById(R.id.audio_bg).setVisibility(View.VISIBLE);
+            mWaveView = findViewById(R.id.wv_audio_bg);
+            mWaveView.setDuration(5000);
+            mWaveView.setStyle(Paint.Style.FILL);
+            mWaveView.setColor(getResources().getColor(R.color.color_lm_bg));
+            mWaveView.setInterpolator(new LinearOutSlowInInterpolator());
+            mWaveView.start();
         }
 
         setTextViewContent(mHourseID, R.string.main_title, String.valueOf(LocalConfig.mLoginRoomID));
 
-        findViewById(R.id.main_btn_exit).setOnClickListener((v) -> mExitRoomDialog.show());
+        findViewById(R.id.main_btn_exit).setOnClickListener(v -> mExitRoomDialog.show());
 
-        findViewById(R.id.main_btn_more).setOnClickListener(v -> {
-            mMoreInfoDialog.show();
-        });
+        findViewById(R.id.main_btn_more).setOnClickListener(v -> mMoreInfoDialog.show());
 
         mLocalMusicListBT.setOnClickListener(v -> mMusicListDialog.show());
 
@@ -242,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                 }
                 mTTTEngine.muteLocalAudioStream(false);
                 mIsMute = false;
+                mWaveView.start();
+                mWaveView.setVisibility(View.VISIBLE);
             } else {
                 if (mIsHeadset) {
                     mAudioChannel.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
@@ -250,6 +274,8 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                 }
                 mTTTEngine.muteLocalAudioStream(true);
                 mIsMute = true;
+                mWaveView.stop();
+                mWaveView.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -482,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                 public void onMute(VideoViewObj bean) {
                     if (!bean.mIsMuteRemote && !isMaster) {
                         Toast.makeText(mContext, getString(!isMaster
-                                ? R.string.popup_lm_mute_error_anchor : R.string.popup_lm_mute_error_audience),
+                                        ? R.string.popup_lm_mute_error_anchor : R.string.popup_lm_mute_error_audience),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -728,6 +754,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         boolean mIsFound = false;
                         for (int i = 0; i < mLocalSeiList.length; i++) {
                             VideoViewObj videoCusSei = mLocalSeiList[i];
+                            if (videoCusSei == null) {
+                                continue;
+                            }
                             if (videoCusSei.mBindUid == muteUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsMuteRemote = mIsMuteAuido;
@@ -758,6 +787,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         MyLog.i("CALL_BACK_ON_SPEAK_MUTE_AUDIO " + mJniObjs.mUid + " | mIsMuteAuido : " + mIsSpeakingMute);
                         for (int i = 0; i < mLocalSeiList.length; i++) {
                             VideoViewObj videoCusSei = mLocalSeiList[i];
+                            if (videoCusSei == null) {
+                                continue;
+                            }
                             if (videoCusSei.mBindUid == speakUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsRemoteDisableAudio = mIsSpeakingMute;

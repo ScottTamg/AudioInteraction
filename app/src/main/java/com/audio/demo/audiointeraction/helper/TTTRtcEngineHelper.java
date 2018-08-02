@@ -128,6 +128,9 @@ public class TTTRtcEngineHelper {
      * @param mLocalSeiList the m local sei list
      */
     public void initRemoteLayout(VideoViewObj[] mLocalSeiList) {
+        for (int i = 0; i < mLocalSeiList.length; i++) {
+            mLocalSeiList[i] = new VideoViewObj(i);
+        }
 
         /*LinearLayout remotely = mActivity.findViewById(R.id.main_remotely_parent);
         int[] screenData = DensityUtils.getScreenData(mActivity);
@@ -294,22 +297,22 @@ public class TTTRtcEngineHelper {
                     obj = getRemoteViewParentLayout(info);
                 }
                 if (obj != null) {
-                    obj.mMuteVoiceBT.setText(mActivity.getResources().getString(R.string.remote_window_ban));
+//                    obj.mMuteVoiceBT.setText(mActivity.getResources().getString(R.string.remote_window_ban));
                     if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
-                        ViewGroup mRemoteChildLayout = obj.mRoot;
-                        mSurfaceView.setZOrderMediaOverlay(true);
-                        mRemoteChildLayout.addView(mSurfaceView, 0);
-                        obj.mRootBG.setVisibility(View.INVISIBLE);
+//                        ViewGroup mRemoteChildLayout = obj.mRoot;
+//                        mSurfaceView.setZOrderMediaOverlay(true);
+//                        mRemoteChildLayout.addView(mSurfaceView, 0);
+//                        obj.mRootBG.setVisibility(View.INVISIBLE);
                     }
-                    obj.mContentRoot.setVisibility(View.VISIBLE);
+//                    obj.mContentRoot.setVisibility(View.VISIBLE);
                     obj.mBindUid = info.getId();
-                    obj.mRemoteUserID.setText(String.valueOf(info.getId()));
+//                    obj.mRemoteUserID.setText(String.valueOf(info.getId()));
                     if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
                         if (id == LocalConfig.mLoginUserID) {
-                            obj.mReserveCamera.setVisibility(View.VISIBLE);
-                            obj.mReserveCamera.setImageResource(R.drawable.mainly_btn_camera_selector);
+//                            obj.mReserveCamera.setVisibility(View.VISIBLE);
+//                            obj.mReserveCamera.setImageResource(R.drawable.mainly_btn_camera_selector);
                         } else {
-                            obj.mReserveCamera.setVisibility(View.INVISIBLE);
+//                            obj.mReserveCamera.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -319,7 +322,7 @@ public class TTTRtcEngineHelper {
                         if (next == obj.mBindUid) {
                             PviewLog.i("OnRemoteAudioMuted init it .... 1" + next);
                             obj.mIsMuteRemote = true;
-                            obj.mSpeakImage.setImageResource(R.drawable.jinyan);
+//                            obj.mSpeakImage.setImageResource(R.drawable.jinyan);
                             mActivity.mMutedAudioUserID.remove(obj.mBindUid);
                             break;
                         }
@@ -331,7 +334,7 @@ public class TTTRtcEngineHelper {
                         if (next == obj.mBindUid) {
                             PviewLog.i("zhxtext OnRemoteAudioMuted init it .... 2" + next);
                             obj.mIsRemoteDisableAudio = true;
-                            obj.mSpeakImage.setImageResource(R.drawable.jinyan);
+//                            obj.mSpeakImage.setImageResource(R.drawable.jinyan);
                             mActivity.mMutedSpeakUserID.remove(obj.mBindUid);
                             break;
                         }
@@ -365,8 +368,8 @@ public class TTTRtcEngineHelper {
 
     public void removeErrorIndexView(TreeSet<EnterUserInfo> mInfos) {
         for (EnterUserInfo value : mInfos) {
-            for (int i = 0; i < mActivity.mLocalSeiList.size(); i++) {
-                VideoViewObj videoCusSei = mActivity.mLocalSeiList.get(i);
+            for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
+                VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
                 if (videoCusSei.mIsUsing && videoCusSei.mBindUid == value.getId()) {
                     if (value.mShowIndex != videoCusSei.mIndex) {
                         adJustRemoteViewDisplay(false, value);
@@ -384,18 +387,18 @@ public class TTTRtcEngineHelper {
                 LocalConfig.mLocalMuteAuido = false;
                 mTTTEngine.muteLocalAudioStream(false);
                 if (mActivity.mIsHeadset) {
-                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
+//                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
                 } else {
-                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
                 }
             } else {
                 obj.mIsMuteRemote = true;
                 LocalConfig.mLocalMuteAuido = true;
                 mTTTEngine.muteLocalAudioStream(true);
                 if (mActivity.mIsHeadset) {
-                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
+//                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
                 } else {
-                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+//                    obj.mSpeakImage.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
                 }
             }
         }
@@ -431,13 +434,13 @@ public class TTTRtcEngineHelper {
             DisplayDevice value = mActivity.mShowingDevices.get(userID);
             if (value != null) {
                 SurfaceView mRemoteSurfaceView = null;
-                int childCount = value.getDisplayView().mRoot.getChildCount();
-                for (int j = 0; j < childCount; j++) {
-                    if (value.getDisplayView().mRoot.getChildAt(j) instanceof SurfaceView) {
-                        mRemoteSurfaceView = (SurfaceView) value.getDisplayView().mRoot.getChildAt(j);
-                        break;
-                    }
-                }
+//                int childCount = value.getDisplayView().mRoot.getChildCount();
+//                for (int j = 0; j < childCount; j++) {
+//                    if (value.getDisplayView().mRoot.getChildAt(j) instanceof SurfaceView) {
+//                        mRemoteSurfaceView = (SurfaceView) value.getDisplayView().mRoot.getChildAt(j);
+//                        break;
+//                    }
+//                }
                 if (mRemoteSurfaceView != null) {
                     int[] location = new int[2];
                     mRemoteSurfaceView.getLocationOnScreen(location);
@@ -827,6 +830,9 @@ public class TTTRtcEngineHelper {
     private boolean checkVideoExist(long uid) {
         for (int i = 0; i < mActivity.mLocalSeiList.length; i++) {
             VideoViewObj videoCusSei = mActivity.mLocalSeiList[i];
+            if (videoCusSei == null) {
+                continue;
+            }
             if (videoCusSei.mIsUsing && videoCusSei.mBindUid == uid) {
                 return true;
             }

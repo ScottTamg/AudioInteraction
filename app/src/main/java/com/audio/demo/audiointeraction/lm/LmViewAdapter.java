@@ -87,7 +87,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
         holder.ivAvatarBg.setColor(mContext.getResources().getColor(R.color.color_lm_bg));
         holder.ivAvatarBg.setInterpolator(new LinearOutSlowInInterpolator());
 
-        if (mList[position] == null) {
+        if (mList[position] == null || mList[position].mBindUid == 0) {
             holder.ivAvatarBg.setVisibility(View.INVISIBLE);
             holder.ivMute.setVisibility(View.GONE);
             holder.ivAvatarBg.stop();
