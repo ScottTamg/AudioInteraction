@@ -128,12 +128,13 @@
         android:layout_height="30dp"
         android:background="@drawable/login_select_role"
         android:button="@null"
+        android:checked="true"
         android:gravity="center"
         android:onClick="onClickModeButton"
         android:text="纯语音连麦"
         android:textColor="@color/role_color"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/audience"
+        app:layout_constraintStart_toStartOf="@+id/videolink"
         app:layout_constraintTop_toTopOf="@+id/videolink" />
 
     <RadioButton
@@ -149,6 +150,7 @@
         android:text="音视频连麦"
         android:textColor="@color/role_color"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 

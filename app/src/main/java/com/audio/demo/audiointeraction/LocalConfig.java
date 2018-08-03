@@ -42,5 +42,5 @@ public class LocalConfig {
 
     public static int mCurrentAudioRoute;
 
-    public static int mRoomMode = SplashActivity.VIDEO_MODE;
+    public static int mRoomMode = SplashActivity.AUDIO_MODE;
 }

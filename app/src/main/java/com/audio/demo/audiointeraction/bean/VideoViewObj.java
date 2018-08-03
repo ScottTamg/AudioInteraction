@@ -1,10 +1,5 @@
 package com.audio.demo.audiointeraction.bean;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 /**
  * Created by wangzhiguo on 17/9/30.
  */

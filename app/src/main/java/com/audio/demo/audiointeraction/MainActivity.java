@@ -695,6 +695,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 String devid = jsonobject2.getString("id");
                                 float x = Float.valueOf(jsonobject2.getString("x"));
                                 float y = Float.valueOf(jsonobject2.getString("y"));
+                                int z = Integer.valueOf(jsonobject2.getString("zOrder"));
 
                                 long userId;
                                 int index = devid.indexOf(":");
@@ -715,6 +716,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                     }
                                 }
 
+                                mLocalSeiList[z] = mShowingDevices.get(userId).getDisplayView();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

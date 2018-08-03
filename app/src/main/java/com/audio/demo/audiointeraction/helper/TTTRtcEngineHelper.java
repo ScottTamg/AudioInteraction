@@ -432,7 +432,7 @@ public class TTTRtcEngineHelper {
             long userID = LocalConfig.mUserEnterOrder.get(i);
             DisplayDevice value = mActivity.mShowingDevices.get(userID);
             if (value != null) {
-                SurfaceView mRemoteSurfaceView = null;
+//                SurfaceView mRemoteSurfaceView = null;
 //                int childCount = value.getDisplayView().mRoot.getChildCount();
 //                for (int j = 0; j < childCount; j++) {
 //                    if (value.getDisplayView().mRoot.getChildAt(j) instanceof SurfaceView) {
@@ -440,17 +440,32 @@ public class TTTRtcEngineHelper {
 //                        break;
 //                    }
 //                }
-                if (mRemoteSurfaceView != null) {
-                    int[] location = new int[2];
-                    mRemoteSurfaceView.getLocationOnScreen(location);
-                    VideoCompositingLayout.Region mRegion = new VideoCompositingLayout.Region();
-                    mRegion.mUserID = userID;
-                    mRegion.x = location[0] * 1.0f / mScreenWidth;
-                    mRegion.y = location[1] * 1.0f / mScreenHeight;
-                    mRegion.width = mSurfaceWidth * 1.0f / mScreenWidth;
-                    mRegion.height = (mSurfaceHeight * 1.0f / mScreenHeight) * 0.998f;
-                    mRegion.zOrder = 1;
-                    tempList.add(mRegion);
+//                if (mRemoteSurfaceView != null) {
+//                    int[] location = new int[2];
+//                    mRemoteSurfaceView.getLocationOnScreen(location);
+//                    VideoCompositingLayout.Region mRegion = new VideoCompositingLayout.Region();
+//                    mRegion.mUserID = userID;
+//                    mRegion.x = location[0] * 1.0f / mScreenWidth;
+//                    mRegion.y = location[1] * 1.0f / mScreenHeight;
+//                    mRegion.width = mSurfaceWidth * 1.0f / mScreenWidth;
+//                    mRegion.height = (mSurfaceHeight * 1.0f / mScreenHeight) * 0.998f;
+//                    mRegion.zOrder = 1;
+//                    tempList.add(mRegion);
+//                }
+
+                for (int j = 0; j < mActivity.mLocalSeiList.length; j++) {
+                    if (userID == mActivity.mLocalSeiList[j].mBindUid) {
+                        int[] location = new int[2];
+//                        mRemoteSurfaceView.getLocationOnScreen(location);
+                        VideoCompositingLayout.Region mRegion = new VideoCompositingLayout.Region();
+                        mRegion.mUserID = userID;
+                        mRegion.x = location[0] * 1.0f / mScreenWidth;
+                        mRegion.y = location[1] * 1.0f / mScreenHeight;
+                        mRegion.width = mSurfaceWidth * 1.0f / mScreenWidth;
+                        mRegion.height = (mSurfaceHeight * 1.0f / mScreenHeight) * 0.998f;
+                        mRegion.zOrder = j;
+                        tempList.add(mRegion);
+                    }
                 }
             }
         }
@@ -461,7 +476,7 @@ public class TTTRtcEngineHelper {
         mRegion.y = 0;
         mRegion.width = 1;
         mRegion.height = 1;
-        mRegion.zOrder = 0;
+        mRegion.zOrder = -1;
         tempList.add(mRegion);
 
         VideoCompositingLayout.Region[] mRegions = new VideoCompositingLayout.Region[tempList.size()];
@@ -862,7 +877,7 @@ public class TTTRtcEngineHelper {
                 }
             }
 
-            if (videoCusSei != null) {
+            if (videoCusSei != null && index > -1) {
                 mActivity.mLocalSeiList[index] = new VideoViewObj(index);
 
 //                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
