@@ -96,7 +96,7 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
             holder.ivAvatar.setImageResource(R.drawable.moremtupian);
             holder.tvNickname.setText(String.valueOf(mList[position].mBindUid));
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.color_lm_bg));
-            if (!mList[position].mIsMuteRemote) {
+            if (!mList[position].mIsRemoteDisableAudio) {
                 holder.ivAvatarBg.setVisibility(View.VISIBLE);
                 holder.ivMute.setVisibility(View.GONE);
                 holder.ivAvatarBg.start();

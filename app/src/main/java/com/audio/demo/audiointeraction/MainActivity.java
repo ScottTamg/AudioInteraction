@@ -489,9 +489,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         LmViewAdapter.LmViewItemListener listener = new LmViewAdapter.LmViewItemListener() {
             @Override
             public void onItemClick(int position, VideoViewObj bean) {
-                if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR) {
+                if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR && bean.mIsUsing) {
                     showLmUserManage(bean, true);
-                } else if (bean.mBindUid == LocalConfig.mLoginUserID) {
+                } else if (bean.mBindUid == LocalConfig.mLoginUserID && bean.mIsUsing) {
                     showLmUserManage(bean, false);
                 }
             }
@@ -508,13 +508,13 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             LmManagePopup.LmManagePopupListener listener = new LmManagePopup.LmManagePopupListener() {
                 @Override
                 public void onMute(VideoViewObj bean) {
-                    if (!bean.mIsMuteRemote && !isMaster) {
+                    if (!bean.mIsRemoteDisableAudio && !isMaster) {
                         Toast.makeText(mContext, getString(!isMaster
                                         ? R.string.popup_lm_mute_error_anchor : R.string.popup_lm_mute_error_audience),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (bean.mIsMuteRemote) {
+                    if (bean.mIsRemoteDisableAudio) {
                         mTTTEngine.muteRemoteSpeaking((int) bean.mBindUid, false);
                     } else {
                         mTTTEngine.muteRemoteSpeaking((int) bean.mBindUid, true);
@@ -625,6 +625,9 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 DisplayDevice mRemoteDisplayDevice = mShowingDevices.get(uid);
                                 if (mRemoteDisplayDevice == null) {
                                     mTTTRtcEngineHelper.adJustRemoteViewDisplay(true, userInfo);
+                                    VideoCompositingLayout layout = new VideoCompositingLayout();
+                                    layout.regions = mTTTRtcEngineHelper.buildRemoteLayoutLocation();
+                                    mTTTEngine.setVideoCompositingLayout(layout);
                                 }
                             } else {
                                 if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
@@ -772,6 +775,21 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         boolean mIsMuteAuido = mJniObjs.mIsDisableAudio;
                         MyLog.i("OnRemoteAudioMuted CALL_BACK_ON_MUTE_AUDIO start! .... " + mJniObjs.mUid
                                 + " | mIsMuteAuido : " + mIsMuteAuido);
+
+                        if (LocalConfig.mRole != Constants.AUDIO_ROUTE_SPEAKER) {
+                            if (mIsMuteAuido) {
+                                mIsMute = true;
+                                mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+                                mWaveView.stop();
+                                mWaveView.setVisibility(View.INVISIBLE);
+                            } else {
+                                mIsMute = false;
+                                mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
+                                mWaveView.start();
+                                mWaveView.setVisibility(View.VISIBLE);
+                            }
+                        }
+
                         boolean mIsFound = false;
                         for (int i = 0; i < mLocalSeiList.length; i++) {
                             VideoViewObj videoCusSei = mLocalSeiList[i];
@@ -814,8 +832,6 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                             if (videoCusSei.mBindUid == speakUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsRemoteDisableAudio = mIsSpeakingMute;
-                                updateLmUserMuteState();
-
                                 if (mIsSpeakingMute) {
 //                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
 //                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
@@ -827,6 +843,8 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                         mTTTEngine.muteLocalAudioStream(false);
                                     }
                                 }
+
+                                updateLmUserMuteState();
                                 break;
                             }
                         }
@@ -835,7 +853,6 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                             MyLog.i("OnRemoteAudioMuted could't find it .... " + mJniObjs.mUid);
                             mMutedSpeakUserID.add(mJniObjs.mUid);
                         }
-
                         break;
                     case LocalConstans.CALL_BACK_ON_AUDIO_ROUTE:
                         int mAudioRoute = mJniObjs.mAudioRoute;

@@ -45,4 +45,16 @@ public class VideoViewObj {
         mIsMuteRemote = false;
         mIsRemoteDisableAudio = false;
     }
+
+    @Override
+    public String toString() {
+        return "VideoViewObj{" +
+                "mIndex=" + mIndex +
+                ", mBindUid=" + mBindUid +
+                ", mIsUsing=" + mIsUsing +
+                ", mIsMuted=" + mIsMuted +
+                ", mIsMuteRemote=" + mIsMuteRemote +
+                ", mIsRemoteDisableAudio=" + mIsRemoteDisableAudio +
+                '}';
+    }
 }
