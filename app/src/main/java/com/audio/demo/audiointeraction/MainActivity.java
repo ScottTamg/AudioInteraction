@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
     public ScrollView mScrollView;
     public ViewGroup mFullScreenShowView;
     private WaveView mWaveView;
+    private ImageView mAnchorMuteBg;
 
     private MoreInfoDialog mMoreInfoDialog;
     private MusicListDialog mMusicListDialog;
@@ -130,10 +131,12 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         }
         if (LocalConfig.mRole == Constants.CLIENT_ROLE_ANCHOR) {
             mTTTEngine.setVideoProfile(Constants.VIDEO_PROFILE_360P, true);
-        } else {
+        } else if (LocalConfig.mRole == Constants.CLIENT_ROLE_BROADCASTER) {
             mTTTEngine.setVideoProfile(Constants.VIDEO_PROFILE_120P, true);
         }
-        mTTTEngine.enableAudioVolumeIndication(300, 3);
+        if (LocalConfig.mRole != Constants.CLIENT_ROLE_AUDIENCE) {
+            mTTTEngine.enableAudioVolumeIndication(300, 3);
+        }
         MyLog.d("MainActivity onCreate");
     }
 
@@ -232,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             mReversalCamera.setVisibility(View.GONE);
             mVideoSpeedShow.setVisibility(View.GONE);
             findViewById(R.id.audio_bg).setVisibility(View.VISIBLE);
+            mAnchorMuteBg = findViewById(R.id.iv_mute_bg);
             mWaveView = findViewById(R.id.wv_audio_bg);
             mWaveView.setDuration(5000);
             mWaveView.setStyle(Paint.Style.FILL);
@@ -263,8 +267,13 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                 }
                 mTTTEngine.muteLocalAudioStream(false);
                 mIsMute = false;
-                mWaveView.start();
-                mWaveView.setVisibility(View.VISIBLE);
+                if (LocalConfig.mRole == Constants.CLIENT_ROLE_ANCHOR) {
+                    mAnchorMuteBg.setVisibility(View.GONE);
+                    mWaveView.start();
+                    mWaveView.setVisibility(View.VISIBLE);
+                } else if (LocalConfig.mRole == Constants.CLIENT_ROLE_BROADCASTER) {
+                    mTTTEngine.muteRemoteSpeaking(LocalConfig.mLoginUserID, false);
+                }
             } else {
                 if (mIsHeadset) {
                     mAudioChannel.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
@@ -273,8 +282,13 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                 }
                 mTTTEngine.muteLocalAudioStream(true);
                 mIsMute = true;
-                mWaveView.stop();
-                mWaveView.setVisibility(View.INVISIBLE);
+                if (LocalConfig.mRole == Constants.CLIENT_ROLE_ANCHOR) {
+                    mAnchorMuteBg.setVisibility(View.VISIBLE);
+                    mWaveView.stop();
+                    mWaveView.setVisibility(View.INVISIBLE);
+                } else if (LocalConfig.mRole == Constants.CLIENT_ROLE_BROADCASTER) {
+                    mTTTEngine.muteRemoteSpeaking(LocalConfig.mLoginUserID, true);
+                }
             }
         });
     }
@@ -306,13 +320,13 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             }
         }
 
-        if (LocalConfig.mRoomMode == SplashActivity.AUDIO_MODE) {
+//        if (LocalConfig.mRoomMode == SplashActivity.AUDIO_MODE) {
 //            for (VideoViewObj obj : mLocalSeiList) {
 //                obj.mRootHead.setImageResource(R.drawable.audiobg);
 //                obj.mRemoteUserID.setTextColor(Color.rgb(137, 137, 137));
 //                ((TextView) obj.mContentRoot.findViewById(R.id.videoly_audio_down)).setTextColor(Color.rgb(137, 137, 137));
 //            }
-        }
+//        }
 
         if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR && LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
             SurfaceView localSurfaceView;
@@ -323,10 +337,12 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             mFullScreenShowView.addView(localSurfaceView, 0);
         }
 
-        if (LocalConfig.mRole != CLIENT_ROLE_ANCHOR) {
+        if (LocalConfig.mRole == CLIENT_ROLE_AUDIENCE) {
             mAudioChannel.setClickable(false);
+            mAudioChannel.setVisibility(View.INVISIBLE);
         } else {
             mAudioChannel.setClickable(true);
+            mAudioChannel.setVisibility(View.VISIBLE);
         }
 
         TextView mRoleShow = findViewById(R.id.main_btn_role);
@@ -358,16 +374,16 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR) {
                 mAudioChannel.setImageResource(R.drawable.mainly_btn_headset_selector);
             } else {
-                for (int i = 0; i < mLocalSeiList.length; i++) {
-                    VideoViewObj videoCusSei = mLocalSeiList[i];
-                    if (videoCusSei == null) {
-                        continue;
-                    }
-                    if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
+//                for (int i = 0; i < mLocalSeiList.length; i++) {
+//                    VideoViewObj videoCusSei = mLocalSeiList[i];
+//                    if (videoCusSei == null) {
+//                        continue;
+//                    }
+//                    if (videoCusSei.mBindUid == LocalConfig.mLoginUserID) {
 //                        videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
-                        break;
-                    }
-                }
+//                        break;
+//                    }
+//                }
             }
         }
     }
@@ -465,17 +481,17 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         if (isShow) {
             mAudioSpeedShow.setVisibility(View.VISIBLE);
             mVideoSpeedShow.setVisibility(View.VISIBLE);
-            for (Map.Entry<Long, DisplayDevice> next : entries) {
+//            for (Map.Entry<Long, DisplayDevice> next : entries) {
 //                next.getValue().getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down).setVisibility(View.VISIBLE);
 //                next.getValue().getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down).setVisibility(View.VISIBLE);
-            }
+//            }
         } else {
             mAudioSpeedShow.setVisibility(View.INVISIBLE);
             mVideoSpeedShow.setVisibility(View.INVISIBLE);
-            for (Map.Entry<Long, DisplayDevice> next : entries) {
+//            for (Map.Entry<Long, DisplayDevice> next : entries) {
 //                next.getValue().getDisplayView().mContentRoot.findViewById(R.id.videoly_video_down).setVisibility(View.INVISIBLE);
 //                next.getValue().getDisplayView().mContentRoot.findViewById(R.id.videoly_audio_down).setVisibility(View.INVISIBLE);
-            }
+//            }
         }
     }
 
@@ -491,9 +507,10 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
             public void onItemClick(int position, VideoViewObj bean) {
                 if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR && bean.mIsUsing) {
                     showLmUserManage(bean, true);
-                } else if (bean.mBindUid == LocalConfig.mLoginUserID && bean.mIsUsing) {
-                    showLmUserManage(bean, false);
                 }
+//                else if (bean.mBindUid == LocalConfig.mLoginUserID && bean.mIsUsing) {
+//                    showLmUserManage(bean, false);
+//                }
             }
         };
         mLmViewAdapter = new LmViewAdapter(this, mLocalSeiList, listener);
@@ -630,12 +647,12 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                     mTTTEngine.setVideoCompositingLayout(layout);
                                 }
                             } else {
-                                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {
-                                    // 向观众发送sei
-                                    VideoCompositingLayout layout = new VideoCompositingLayout();
-                                    layout.regions = mTTTRtcEngineHelper.buildRemoteLayoutLocation();
-                                    mTTTEngine.setVideoCompositingLayout(layout);
-                                }
+//                                if (LocalConfig.mRoomMode == SplashActivity.VIDEO_MODE) {}
+                                // 向观众发送sei
+                                VideoCompositingLayout layout = new VideoCompositingLayout();
+                                layout.regions = mTTTRtcEngineHelper.buildRemoteLayoutLocation();
+                                mTTTEngine.setVideoCompositingLayout(layout);
+
                                 LocalConfig.mAudience++;
                             }
                         } else {
@@ -698,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 String devid = jsonobject2.getString("id");
                                 float x = Float.valueOf(jsonobject2.getString("x"));
                                 float y = Float.valueOf(jsonobject2.getString("y"));
-                                int z = Integer.valueOf(jsonobject2.getString("zOrder"));
+                                int z = Integer.valueOf(jsonobject2.getString("z"));
 
                                 long userId;
                                 int index = devid.indexOf(":");
@@ -719,7 +736,18 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                     }
                                 }
 
-                                mLocalSeiList[z] = mShowingDevices.get(userId).getDisplayView();
+                                if (z < 0 || z > 12) {
+                                    continue;
+                                }
+
+                                if (mShowingDevices.get(userId) == null) {
+                                    VideoViewObj obj = new VideoViewObj(z);
+                                    obj.mIsUsing = true;
+                                    obj.mBindUid = userId;
+                                    mLocalSeiList[z] = obj;
+                                } else {
+                                    mLocalSeiList[z] = mShowingDevices.get(userId).getDisplayView();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -776,15 +804,17 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                         MyLog.i("OnRemoteAudioMuted CALL_BACK_ON_MUTE_AUDIO start! .... " + mJniObjs.mUid
                                 + " | mIsMuteAuido : " + mIsMuteAuido);
 
-                        if (LocalConfig.mRole != Constants.AUDIO_ROUTE_SPEAKER) {
+                        if (muteUid == LocalConfig.mBroadcasterID && LocalConfig.mRole != Constants.AUDIO_ROUTE_SPEAKER) {
                             if (mIsMuteAuido) {
                                 mIsMute = true;
-                                mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+//                                mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+                                mAnchorMuteBg.setVisibility(View.VISIBLE);
                                 mWaveView.stop();
                                 mWaveView.setVisibility(View.INVISIBLE);
                             } else {
                                 mIsMute = false;
-                                mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                                mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
+                                mAnchorMuteBg.setVisibility(View.GONE);
                                 mWaveView.start();
                                 mWaveView.setVisibility(View.VISIBLE);
                             }
@@ -798,7 +828,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                             }
                             if (videoCusSei.mBindUid == muteUid) {
                                 mIsFound = true;
-                                videoCusSei.mIsMuteRemote = mIsMuteAuido;
+                                videoCusSei.mIsRemoteDisableAudio = mIsMuteAuido;
                                 updateLmUserMuteState();
 
 //                                if (mIsMuteAuido || videoCusSei.mIsRemoteDisableAudio) {
@@ -838,7 +868,7 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                 } else {
 //                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
 //                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                                    videoCusSei.mIsMuteRemote = false;
+                                    videoCusSei.mIsRemoteDisableAudio = false;
                                     if (speakUid == LocalConfig.mLoginUserID) {
                                         mTTTEngine.muteLocalAudioStream(false);
                                     }
@@ -860,21 +890,21 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                             mMoreInfoDialog.audioRouteChange(mAudioRoute);
                         }
                         if (LocalConfig.mRole == CLIENT_ROLE_ANCHOR) {
-                            if (mAudioRoute == Constants.AUDIO_ROUTE_SPEAKER) {
-                                mIsHeadset = false;
-                                if (mIsMute) {
-                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
-                                } else {
-                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                                }
-                            } else {
-                                mIsHeadset = true;
-                                if (mIsMute) {
-                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
-                                } else {
-                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_headset_selector);
-                                }
-                            }
+//                            if (mAudioRoute == Constants.AUDIO_ROUTE_SPEAKER) {
+//                                mIsHeadset = false;
+//                                if (mIsMute) {
+//                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+//                                } else {
+//                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
+//                                }
+//                            } else {
+//                                mIsHeadset = true;
+//                                if (mIsMute) {
+//                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
+//                                } else {
+//                                    mAudioChannel.setImageResource(R.drawable.mainly_btn_headset_selector);
+//                                }
+//                            }
                         } else if (LocalConfig.mRole == CLIENT_ROLE_BROADCASTER) {
                             for (int i = 0; i < mLocalSeiList.length; i++) {
                                 VideoViewObj videoCusSei = mLocalSeiList[i];
@@ -885,18 +915,18 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                                     if (mAudioRoute == Constants.AUDIO_ROUTE_SPEAKER) {
                                         mIsHeadset = false;
                                         updateLmUserMuteState();
-//                                        if (videoCusSei.mIsMuteRemote) {
-//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
-//                                        } else {
-//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-//                                        }
+                                        if (mIsMute) {
+                                            mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+                                        } else {
+                                            mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
+                                        }
                                     } else {
                                         mIsHeadset = true;
-//                                        if (videoCusSei.mIsMuteRemote) {
-//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
-//                                        } else {
-//                                            videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_headset_selector);
-//                                        }
+                                        if (mIsMute) {
+                                            mAudioChannel.setImageResource(R.drawable.mainly_btn_muted_headset_selector);
+                                        } else {
+                                            mAudioChannel.setImageResource(R.drawable.mainly_btn_headset_selector);
+                                        }
                                     }
                                     break;
                                 }

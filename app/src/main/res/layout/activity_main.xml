@@ -33,10 +33,17 @@
 
             <ImageView
                 android:layout_width="86dp"
-                android:layout_height="87dp"
+                android:layout_height="86dp"
                 android:layout_gravity="center"
                 android:src="@drawable/audiobg"
                 android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/iv_mute_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_microphone_close"
+                android:visibility="gone"/>
         </FrameLayout>
 
         <ScrollView
