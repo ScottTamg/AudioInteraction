@@ -16,22 +16,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_avatar"
             android:layout_width="@dimen/dp40"
             android:layout_height="@dimen/dp40"
             android:layout_gravity="center" />
 
-        <TextView
+        <!--<TextView-->
+            <!--android:id="@+id/iv_mute"-->
+            <!--android:layout_width="@dimen/dp23"-->
+            <!--android:layout_height="13dp"-->
+            <!--android:layout_gravity="center_horizontal|bottom"-->
+            <!--android:text="@string/lm_disable_microphone_text"-->
+            <!--android:textColor="@color/color_lm_disable_microphone"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="7sp"-->
+            <!--android:background="@drawable/shape_live_bg"-->
+            <!--android:visibility="gone"/>-->
+
+        <ImageView
             android:id="@+id/iv_mute"
-            android:layout_width="@dimen/dp23"
-            android:layout_height="13dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:text="@string/lm_disable_microphone_text"
-            android:textColor="@color/color_lm_disable_microphone"
-            android:gravity="center"
-            android:textSize="7sp"
-            android:background="@drawable/shape_live_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_microphone_close"
             android:visibility="gone"/>
 
     </FrameLayout>

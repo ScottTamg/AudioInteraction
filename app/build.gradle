@@ -6,8 +6,8 @@ android {
         applicationId "com.audio.demo.audiointeraction"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -37,4 +37,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation(name: 'wstechapi-release', ext: 'aar')
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }

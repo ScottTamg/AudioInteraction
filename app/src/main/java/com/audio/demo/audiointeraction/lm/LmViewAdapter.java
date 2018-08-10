@@ -16,6 +16,8 @@ import com.audio.demo.audiointeraction.R;
 import com.audio.demo.audiointeraction.bean.VideoViewObj;
 import com.audio.demo.audiointeraction.widget.WaveView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * @author txw
@@ -27,6 +29,12 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
     private Context mContext;
     private VideoViewObj[] mList;
     private LmViewItemListener mListener;
+    private String[] mNames = {"成龙", "林心如", "陈一发", "周星驰", "高圆圆", "贾静雯", "胡歌",
+            "陈奕迅", "周杰伦", "佟丽娅", "papi酱", "陈赫"};
+    private int[] mIcons = {R.drawable.chenglong, R.drawable.linxinru, R.drawable.chenyifa,
+            R.drawable.zhouxingchi, R.drawable.gaoyuanyuan, R.drawable.jiajingwen, R.drawable.huge,
+            R.drawable.chenyixun, R.drawable.zhoujielun, R.drawable.tongliya, R.drawable.papi,
+            R.drawable.chenhe};
 
     public LmViewAdapter(Context context, VideoViewObj[] list, LmViewItemListener listener) {
         this.mContext = context;
@@ -93,17 +101,18 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
             holder.tvNickname.setText(R.string.audio_lm_empty_name);
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
-            holder.ivAvatar.setImageResource(R.drawable.moremtupian);
-            holder.tvNickname.setText(String.valueOf(mList[position].mBindUid));
+            holder.ivAvatar.setImageResource(mIcons[position]);
+            holder.tvNickname.setText(String.valueOf(mNames[position]));
             holder.tvNickname.setTextColor(mContext.getResources().getColor(R.color.color_lm_bg));
             if (!mList[position].mIsRemoteDisableAudio) {
                 holder.ivAvatarBg.setVisibility(View.VISIBLE);
-                holder.ivMute.setVisibility(View.GONE);
                 holder.ivAvatarBg.start();
+
+                holder.ivMute.setVisibility(View.GONE);
             } else {
                 holder.ivAvatarBg.setVisibility(View.INVISIBLE);
-                holder.ivMute.setVisibility(View.VISIBLE);
                 holder.ivAvatarBg.stop();
+                holder.ivMute.setVisibility(View.VISIBLE);
             }
         }
 
@@ -117,8 +126,8 @@ public class LmViewAdapter extends RecyclerView.Adapter<LmViewAdapter.LmViewHold
 
     class LmViewHolder extends RecyclerView.ViewHolder {
         WaveView ivAvatarBg;
-        ImageView ivAvatar;
-        TextView ivMute;
+        CircleImageView ivAvatar;
+        ImageView ivMute;
         TextView tvNickname;
         FrameLayout mFlLayout;
         View itemView;

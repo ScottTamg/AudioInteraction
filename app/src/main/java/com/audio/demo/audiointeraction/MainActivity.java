@@ -131,12 +131,10 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
         }
         if (LocalConfig.mRole == Constants.CLIENT_ROLE_ANCHOR) {
             mTTTEngine.setVideoProfile(Constants.VIDEO_PROFILE_360P, true);
-        } else if (LocalConfig.mRole == Constants.CLIENT_ROLE_BROADCASTER) {
+        } else {
             mTTTEngine.setVideoProfile(Constants.VIDEO_PROFILE_120P, true);
         }
-        if (LocalConfig.mRole != Constants.CLIENT_ROLE_AUDIENCE) {
-            mTTTEngine.enableAudioVolumeIndication(300, 3);
-        }
+        mTTTEngine.enableAudioVolumeIndication(300, 3);
         MyLog.d("MainActivity onCreate");
     }
 
@@ -862,15 +860,12 @@ public class MainActivity extends AppCompatActivity implements DataInfoShowCallb
                             if (videoCusSei.mBindUid == speakUid) {
                                 mIsFound = true;
                                 videoCusSei.mIsRemoteDisableAudio = mIsSpeakingMute;
-                                if (mIsSpeakingMute) {
-//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_cancel_ban));
-//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.jinyan);
-                                } else {
-//                                    videoCusSei.mMuteVoiceBT.setText(getResources().getString(R.string.remote_window_ban));
-//                                    videoCusSei.mSpeakImage.setImageResource(R.drawable.mainly_btn_speaker_selector);
-                                    videoCusSei.mIsRemoteDisableAudio = false;
-                                    if (speakUid == LocalConfig.mLoginUserID) {
-                                        mTTTEngine.muteLocalAudioStream(false);
+                                if (speakUid == LocalConfig.mLoginUserID) {
+                                    mTTTEngine.muteLocalAudioStream(mIsSpeakingMute);
+                                    if (mIsSpeakingMute) {
+                                        mAudioChannel.setImageResource(R.drawable.mainly_btn_mute_speaker_selector);
+                                    } else {
+                                        mAudioChannel.setImageResource(R.drawable.mainly_btn_speaker_selector);
                                     }
                                 }
 

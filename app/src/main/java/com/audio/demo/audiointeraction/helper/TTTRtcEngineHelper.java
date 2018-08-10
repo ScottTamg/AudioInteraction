@@ -591,7 +591,7 @@ public class TTTRtcEngineHelper {
      * @param volumeLevel
      */
     public void audioVolumeIndication(long volumeUserID, int volumeLevel, boolean mIsMuteRemote) {
-        if (volumeUserID == LocalConfig.mBroadcasterID) {
+        if (volumeUserID == LocalConfig.mLoginUserID) {
             if (mIsMuteRemote) {
                 return;
             }
